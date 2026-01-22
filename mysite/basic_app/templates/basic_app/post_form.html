@@ -1,0 +1,12 @@
+{% extends "basic_app/base.html" %}
+{%block body%}
+<form method="POST" class="d-flex">
+    {{form.as_p}}
+    {%csrf_token%}
+    <div class="mb-2">
+        <input type="submit" class="btn btn-info" value="Add Post">
+
+    </div>
+</form>
+<script>var editor = new MediumEditor('.editable');</script>
+{%endblock%}

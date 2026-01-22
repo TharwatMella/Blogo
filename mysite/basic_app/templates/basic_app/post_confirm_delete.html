@@ -1,0 +1,10 @@
+{% extends "basic_app/base.html" %}
+{% block body %}
+
+    <form method='post'>
+        {% csrf_token %}
+
+        {{form}}
+        <submit type='submit' value='Confirm'>
+    </form>
+{% endblock body %}

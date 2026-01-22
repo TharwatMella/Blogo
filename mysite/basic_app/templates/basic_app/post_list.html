@@ -1,0 +1,31 @@
+{% extends "basic_app/base.html" %}
+{%block body%}
+<div class="">
+    {% for post in posts %}
+
+    <div class="post mt-3 ">
+        <a class="text-decoration-none text-reset" href={%url 'blog:detail' post.pk%}>
+            <p class>{{post.title}}:
+                {{post.text|safe}}
+            </p>
+            {%if post.is_Published%}
+            <div>
+                <p>{{post.publication_date|date:"D M Y h:m:s"}}</p>
+            </div>
+            <div>
+                <p>Comments= {{post.comment_set.count}}</p>
+            </div>
+            {%endif%}
+            <div>
+                <p>By {{post.author}}</p>
+            </div>
+        </a>
+    </div>
+
+    {% endfor %}
+</div>
+{%endblock%}
+{% comment %}
+<form method='post' class="d-inline" action={%url 'blog:delete' post.pk %}>{% csrf_token %}<input class="" type="submit"
+        value="Delete"></input></form> {% if isDrafts %}<a href={%url 'blog:postPublish' post.pk%}>
+    Publish</a>{% endif %} {% endcomment %}

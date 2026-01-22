@@ -1,0 +1,49 @@
+{% extends "basic_app/base.html" %}
+{%block body%}
+<h1 class="posttitle rainbow-text">{{post.title}}</h1>{{post.text|safe}}. 
+{% if post.is_Published %}
+{{post.publication_date}}
+{% else %}
+<p>the Post is still Draft Please Delete or Publish</p>
+<a class="btn btn-primary" href={%url 'blog:postPublish' post.pk%}>Publish</a>
+
+{% endif %}
+{%if post.author == user%}
+<form method="POST" class="d-inline"  action={%url 'blog:delete' post.pk%}>{{form}} {%csrf_token%} <input type="submit" class="btn btn-danger" value="Delete"></form>
+<a class="btn btn-primary d-inline" href={%url 'blog:update' post.pk%}>Edit</a>
+{%endif%}
+ 
+
+<div class="comments">
+    <h1>Comments:</h1>
+    {%for comment in post.comment_set.all%}
+    {% if post.author == user %}
+    <p><b>{{comment.user}}: </b>{{comment.text|safe}}  
+        {%if comment.isBanned%}
+        <a href={%url "blog:ban" userpk=comment.user.pk postpk=post.pk%}> UnBan </a>        
+        {%else%}
+        <a href={%url "blog:ban" userpk=comment.user.pk postpk=post.pk%}> Ban </a>        
+        {% endif %}
+        
+    {% if not comment.approved %}
+     <a class="btn btn-primary" href={%url 'blog:commentApprove' comment.pk%}>Approve</a>
+     <a class="btn btn-danger" href={%url 'blog:commentRemove' comment.pk%}>Remove</a>
+     {% endif %}</p>
+    {% elif comment.approved %}
+    <p><b>{{comment.user}}: </b>{{comment.text}}</p>
+    
+
+    {%endif%}
+    
+
+{%endfor%}
+</div>
+{%if commentAllowed%}
+<a class="btn btn-primary" href={%url 'blog:createComment' post.pk%}>Add Comment</a>
+{% else %}
+<a class="btn btn-primary disabled" href={%url 'blog:createComment' post.pk%}>Add Comment</a>
+
+{%endif%}
+{% comment %} <form method="POST" action={%url 'blog:createComment' post.pk%}>{{form}} {%csrf_token%} <input type="submit" value="Submit"></form> {% endcomment %}
+
+{%endblock%}

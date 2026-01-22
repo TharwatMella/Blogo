@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+{%load static%}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{%block title%} {%endblock%}</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+
+    <!-- Medium Style Editor -->
+    <script src="//cdn.jsdelivr.net/npm/medium-editor@latest/dist/js/medium-editor.min.js"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/medium-editor@latest/dist/css/medium-editor.min.css"
+        type="text/css" media="screen" charset="utf-8">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/blog.css'%}">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Quicksand:wght@300..700&family=Rubik+Glitch&family=Tektur:wdth,wght@75..100,400..900&display=swap"
+        rel="stylesheet">
+</head>
+
+
+<body class="">
+    <!-- NavBar -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fonted">
+        <div class="container-fluid">
+            <a class="rainbow-text navbar-brand" href={%url "blog:list" %}>MySite</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                aria-controls="mainNavbar" aria- expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse " id="mainNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href={%url 'blog:about' %}>About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href={%url 'blog:drafts' %}>Drafts</a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav">
+                    {%if user.is_authenticated%}
+                    <form class="d-flex" method="post" action={%url 'logout' %}>
+                        {% csrf_token %}
+                        <li class="nav-item">
+                            <button class="nav-link" type="submit">Logout</button>
+                        </li>
+                    </form>
+                    <li class="nav-item">
+                        <a class="nav-link" href={%url 'blog:createPost' %}>Post</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link">Welcome, {{user}}</a>
+                    </li>
+
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href={%url 'login' %}>Login</a>
+                    </li>
+                    {%endif%}
+
+                    {%if user.is_superuser%}
+                    <li class="nav-item">
+                        <a class="nav-link" href={%url 'blog:about' %}>Flush DB</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href={%url 'admin:index' %}>Admin</a>
+                    </li>
+                    {%endif%}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Content Here -->
+    <div class="container">
+        {%block body%}
+        {%endblock%}
+    </div>
+
+
+
+</body>
+
+</html>

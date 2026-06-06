@@ -1,5 +1,12 @@
 {
     "editor.scrollbar.horizontal": "visible",
     "editor.scrollbar.vertical": "visible",
-    "editor.smoothScrolling": true
+    "editor.smoothScrolling": true,
+    "python-envs.pythonProjects": [
+        {
+            "path": ".",
+            "envManager": "ms-python.python:conda",
+            "packageManager": "ms-python.python:conda"
+        }
+    ]
 }

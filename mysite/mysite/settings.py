@@ -25,7 +25,7 @@ TEMPLATE_DIR = BASE_DIR / "templates"
 SECRET_KEY = "django-insecure-!34*3d=dprc1ik3se4)+h3j!$muetx4k1rvx)t12jg4v=z0sy@"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -127,3 +127,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "/login/"
+CSRF_COOKIE_SECURE=True

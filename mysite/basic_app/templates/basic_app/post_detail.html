@@ -1,49 +1,69 @@
 {% extends "basic_app/base.html" %}
 {%block body%}
-<h1 class="posttitle rainbow-text">{{post.title}}</h1>{{post.text|safe}}. 
-{% if post.is_Published %}
-{{post.publication_date}}
-{% else %}
-<p>the Post is still Draft Please Delete or Publish</p>
-<a class="btn btn-primary" href={%url 'blog:postPublish' post.pk%}>Publish</a>
+<div class="post mt-3">
 
-{% endif %}
-{%if post.author == user%}
-<form method="POST" class="d-inline"  action={%url 'blog:delete' post.pk%}>{{form}} {%csrf_token%} <input type="submit" class="btn btn-danger" value="Delete"></form>
-<a class="btn btn-primary d-inline" href={%url 'blog:update' post.pk%}>Edit</a>
-{%endif%}
- 
+    <h2 class="posttitle">{{post.title}}</h2>
+    <div>{{post.text|safe}}</div>
+    <div class="">
+        {%if post.author == user%}
+        <form method="POST" class="d-inline" action={%url 'blog:delete' post.pk%}>{{form}} {%csrf_token%} <button
+                type="submit" class="btn btn-dark btn-sm" value="Delete"><svg xmlns="http://www.w3.org/2000/svg"
+                    width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                    <path
+                        d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
+                </svg></button></form>
+        <a type="button" class="btn btn-dark d-inline btn-sm" href={%url 'blog:update' post.pk%}>Edit</a>
+        {%endif%}
+    </div>
 
-<div class="comments">
-    <h1>Comments:</h1>
+</div>
+
+<div>
+    {% if post.is_Published %}
+    <p class="text-end mt-3 fw-lighter fs-6">{{post.publication_date}}</p>
+    {% else %}
+    <p class="text-end mt-3 fw-lighter fs-6">the Post is still Draft Please Delete or Publish</p>
+    <a class="btn btn-primary" href={%url 'blog:postPublish' post.pk%}>Publish</a>
+    {% endif %}
+
+
+</div>
+
+
+
+
+<div class="comments mt-3">
+    <h3>Comments:</h3>
     {%for comment in post.comment_set.all%}
     {% if post.author == user %}
-    <p><b>{{comment.user}}: </b>{{comment.text|safe}}  
+    <p><b>{{comment.user}}: </b>{{comment.text|safe}}
         {%if comment.isBanned%}
-        <a href={%url "blog:ban" userpk=comment.user.pk postpk=post.pk%}> UnBan </a>        
+        <a href={%url "blog:ban" userpk=comment.user.pk postpk=post.pk%}> UnBan </a>
         {%else%}
-        <a href={%url "blog:ban" userpk=comment.user.pk postpk=post.pk%}> Ban </a>        
+        <a href={%url "blog:ban" userpk=comment.user.pk postpk=post.pk%}> Ban </a>
         {% endif %}
-        
-    {% if not comment.approved %}
-     <a class="btn btn-primary" href={%url 'blog:commentApprove' comment.pk%}>Approve</a>
-     <a class="btn btn-danger" href={%url 'blog:commentRemove' comment.pk%}>Remove</a>
-     {% endif %}</p>
+
+        {% if not comment.approved %}
+        <a type="button" class="btn btn-dark btn-sm" href={%url 'blog:commentApprove' comment.pk%}>Approve</a>
+        <a type="button" class="btn btn-dark btn-sm" href={%url 'blog:commentRemove' comment.pk%}>Remove</a>
+        {% endif %}
+    </p>
     {% elif comment.approved %}
     <p><b>{{comment.user}}: </b>{{comment.text}}</p>
-    
+
 
     {%endif%}
-    
 
-{%endfor%}
+
+    {%endfor%}
 </div>
 {%if commentAllowed%}
-<a class="btn btn-primary" href={%url 'blog:createComment' post.pk%}>Add Comment</a>
+<a class="btn btn-dark" href={%url 'blog:createComment' post.pk%}>Add Comment</a>
 {% else %}
-<a class="btn btn-primary disabled" href={%url 'blog:createComment' post.pk%}>Add Comment</a>
-
+<a class="btn btn-dark disabled" href={%url 'blog:createComment' post.pk%}>Add Comment</a>
 {%endif%}
-{% comment %} <form method="POST" action={%url 'blog:createComment' post.pk%}>{{form}} {%csrf_token%} <input type="submit" value="Submit"></form> {% endcomment %}
+
+{% comment %} <form method="POST" action={%url 'blog:createComment' post.pk%}>{{form}} {%csrf_token%} <input
+        type="submit" value="Submit"></form> {% endcomment %}
 
 {%endblock%}

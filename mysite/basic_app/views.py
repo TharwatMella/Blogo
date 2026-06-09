@@ -50,22 +50,23 @@ class DraftList(LoginRequiredMixin, ListView):
 
 class PostDetail(DetailView):
     model = Post
-    extra_context = {"commentAllowed": False}
-
     def get(self, request, *args, **kwargs):
         result = super().get(self, request, *args, **kwargs)
-        if request.user.is_authenticated:
-            blocked = Blocklist.objects.filter(post=self.object, user=self.request.user)
-            if blocked:
-                self.extra_context["commentAllowed"] = False
-            else:
-                self.extra_context["commentAllowed"] = True
-
         if self.object.author == request.user or self.object.is_Published:
             return result
         else:
             return redirect("/")
-
+        
+        
+    def get_context_data(self, **kwargs):
+        result=super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            blocked = Blocklist.objects.filter(post=self.object, user=self.request.user)
+            if blocked:
+                result["commentAllowed"] = False
+            else:
+                result["commentAllowed"] = True
+        return result
 
 def postDetail(request, pk):
     object = get_object_or_404(Post, pk=pk)

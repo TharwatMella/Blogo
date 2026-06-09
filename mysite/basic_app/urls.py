@@ -1,4 +1,7 @@
 from django.urls import path, include
+from django.conf import settings
+
+from django.conf.urls.static import static
 from basic_app.views import (
     PostList,
     AboutView,
@@ -29,4 +32,4 @@ urlpatterns = [
     path("commentApprove/<int:pk>", commentApprove, name="commentApprove"),
     path("commentRemove/<int:pk>", commentRemove, name="commentRemove"),
     path("ban/<int:userpk>/<int:postpk>", banUser, name="ban"),
-]
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
